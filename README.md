@@ -2,6 +2,12 @@
 
 This repository contains experiments and model training workflows for NASA turbofan Remaining Useful Life (RUL) prediction.
 
+## 0) Dataset
+
+This project uses the NASA CMAPSS (C-MAPSS) FD001 dataset.  
+They can be downloaded from: https://www.nasa.gov/intelligent-systems-division/discovery-and-systems-health/pcoe/pcoe-data-set-repository/  
+or via Kaggle: https://www.kaggle.com/datasets/behrad3d/nasa-cmaps
+
 ## 1) Environment Setup (Do This First)
 
 1. Create a virtual environment:
@@ -58,10 +64,10 @@ Use `Hybrid/` for hybrid Transformer-based experiments (LSTM/GRU/CNN encoders wi
 
 - `best_transformer_hopt_lowvar_FINAL.pth`: saved best checkpoint weights from hyperparameter optimisation run.
 - `hopt_lowvar_results.csv`: saved results from hyperparameter optimisation runs.
-- `transformer-with-opt.ipynb`: standalone Transformer model workflow with hyperparameter optimization loop and evaluation logging, with plotted graph of best model's RMSE Loss.
+- `transformer-with-opt.ipynb`: standalone Transformer model workflow with 7 dataset runs, hyperparameter optimization loop and evaluation logging, with plotted graph of best model's RMSE Loss.
 - `recreate-transformer-inference.ipynb`: notebook that takes the best hyperparameters found in `transformer-with-opt.ipynb` and `best_transformer_hopt_lowvar_FINAL.pth` to reproduce metrics.
 - `transformer_results_detailed.csv`: saved results (all seeds) from various dataset runs.
-- `transformer_results_detailed.csv`: saved results (mean average) from various dataset runs.
+- `transformer_results_summary.csv`: saved results (mean average) from various dataset runs.
 
 ## 5) Architecture Performance After Fine-tuning
 
@@ -121,3 +127,18 @@ Use `Hybrid/` for hybrid Transformer-based experiments (LSTM/GRU/CNN encoders wi
 3. `RNN-based/best_model_and_evaluation/best-gru.ipynb` and `RNN-based/best_model_and_evaluation/load_and_evaluate.ipynb` (final RNN training and evaluation).
 4. `Transformer/transformer-with-opt.ipynb` (standalone Transformer optimization and evaluation).
 5. `Hybrid/README.md` to have a rough idea of the Hybrid Transformer workflows and how to run the evaluation, then `Hybrid/FD001_hybrid_transformers_FE_AWS_SagemakerAI.ipynb`, then `Hybrid/FD001_hyperparamter_tunning.ipynb` and FE/AWS notebooks (Hybrid Transformer workflows).
+
+## 8) Reproducing Report Figures
+
+| Figure | Notebook | Instructions |
+|--------|----------|--------------|
+| Fig 5.1.1–5.1.2 (RNN tuning tables) | `RNN-based/tuning/` | Run all cells; RMSE values auto-logged |
+| Fig 5.1.3 (RNN loss curves) | `RNN-based/tuning/rnn-fd001.ipynb` | Run all cells |
+| Fig 5.1.4 (GRU loss curves) | `RNN-based/tuning/gru-fd001.ipynb` | Run all cells |
+| Fig 5.1.5 (LSTM loss curves) | `RNN-based/tuning/lstm-fd001.ipynb` | Run all cells |
+| Fig 5.1.6 (best GRU loss curve) | `RNN-based/best_model_and_evaluation/best-gru.ipynb` | Run all cells |
+| Fig 5.2.1 (Transformer dataset results) | `Transformer/transformer-with-opt.ipynb` | Results auto-logged to `hopt_lowvar_results.csv` |
+| Fig 5.2.2 (Transformer loss curve) | `Transformer/transformer-with-opt.ipynb` | Run last cell |
+| Fig 5.3.1 (Hybrid results table) | ` Hybrid/FD001_hybrid_transformers_FE_AWS_SagemakerAI.ipynb` | Run all cells; results printed per seed |
+| Fig 5.3.2 (GRU-Transformer loss curve) | `Hybrid/FD001_hyperparamter_tunning.ipynb` | Best config plotted automatically across all seeds |
+| Fig 7.1 (confusion matrix) | `Hybrid/FD001_hyperparamter_tunning.ipynb` | Run the classification threshold cell at the end of the notebook |

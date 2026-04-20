@@ -1,4 +1,4 @@
-# Owen's RUL Prediction Implementation
+# RUL Prediction Implementation
 ## Hybrid Transformer Models for Remaining Useful Life Prediction
 
 ### Overview
@@ -9,23 +9,27 @@ This folder contains implementations of three hybrid transformer-based models fo
 
 ### Files
 
-#### Main Notebook
-- **`model_exploration.ipynb`** - Complete implementation notebook with:
+#### Main Notebooks
+- **`FD001_hybrid_transformers_FE_AWS_SagemakerAI.ipynb`** 
+Complete implementation notebook with:
   - Exploratory Data Analysis (EDA)
   - Data preparation & sequence creation
   - Three model architectures
   - Training framework
   - Examples and next steps
 
+- **`FD001_hyperparameter_tuning.ipynb`** 
+After training all models with fixed hyperparameters and saved the models, we are able to identify the best dataset and model combination. We will then select the best model and dataset combination to perform hyperparameter tuning and evaluate the model using classification metrics (accuracy, precision, recall, F1-score, confusion matrix) in the `FD001_hyperparameter_tuning.ipynb` notebook.
+
 #### Supporting Utilities
 - **`config.py`** - Configuration file for all model hyperparameters and paths
-- **`utils.py`** - Helper functions (seeding, device management, model I/O)
+- **`helpers.py`** - Helper functions (seeding, device management, model I/O)
 
 ### Quick Start
 
 #### 1. Run EDA
 ```python
-# All in model_exploration.ipynb Part 1
+# All in FD001_hybrid_transformers_FE_AWS_SagemakerAI.ipynb Part 1
 # Shows dataset statistics, visualizations, and data quality
 ```
 
@@ -57,6 +61,29 @@ trainer = ModelTrainer(model, DEVICE, 'LSTM-Transformer')
 history = trainer.train(train_loader, val_loader, epochs=50, lr=0.001)
 trainer.plot_history()
 ```
+
+### Evaluation Instructions
+
+#### A) FD001_hybrid_transformers_FE_AWS_SagemakerAI.ipynb (Evaluate saved models)
+1. Open the notebook: `Hybrid/FD001_hybrid_transformers_FE_AWS_SagemakerAI.ipynb`.
+2. Ensure your working directory is the repo root:
+    - Expected: `.../sutd_50039_deep_learning`
+    - If needed, change via the first directory alignment cell.
+3. Run the notebook from top to bottom (accept the training sections; evaluation loads saved models).
+4. What you will see:
+    - Multi-seed evaluation logs with RMSE for train/val/test.
+    - A summary table of results per model and dataset.
+    - Optional plots comparing model performance.
+
+#### B) FD001_hyperparameter_tuning.ipynb (Classification-based evaluation)
+1. Open the notebook: `Hybrid/FD001_hyperparameter_tuning.ipynb`.
+2. Ensure your working directory is the repo root:
+    - Expected: `.../sutd_50039_deep_learning`
+3. Run the last section only (the standalone inference + metrics cells).
+4. What you will see:
+    - Health-state predictions (Healthy vs Not Healthy).
+    - Accuracy, precision, recall, and F1 score.
+    - A confusion matrix plot.
 
 ### Model Architectures
 
@@ -111,7 +138,7 @@ RUL Prediction (batch,)
 **FD001 (Current Default)**
 - Training: 100 engines, ~192 cycles each, 21 sensors
 - Test: 100 engines, ~31 cycles each, 21 sensors
-- Sequence length: 30 cycles
+- Sequence length: 50 cycles
 - Features: 24 (21 sensors + 3 operational settings)
 - Total sequences: ~27K (train+val+test)
 
@@ -119,7 +146,7 @@ RUL Prediction (batch,)
 
 | Parameter | Value |
 |-----------|-------|
-| Sequence Length | 30 |
+| Sequence Length | 50 |
 | Batch Size | 32 |
 | d_model | 64 |
 | Attention Heads | 4 |
@@ -132,45 +159,18 @@ RUL Prediction (batch,)
 | Early Stopping Patience | 10 |
 | Random Seed | 1234 |
 
-### Training Tips
+### Hyperparameter Tuning Space
 
-1. **Start Small**: Begin with CNN-Transformer (fastest training)
-2. **Monitor MAE**: Target validation MAE < 10 cycles
-3. **Early Stopping**: Prevents overfitting around epoch 20-30
-4. **GPU Acceleration**: Automatically uses CUDA if available
-5. **Save Best Models**: For ensemble integration with Jessica & Lucas
+This is the search space used in `FD001_hyperparameter_tuning.ipynb`:
 
-### Performance Targets
+| Parameter | Values |
+|-----------|--------|
+| Sequence Length | 30, 50, 100 |
+| Learning Rate | 1e-4, 5e-5, 1e-3 |
+| d_model | 32, 64, 128 |
+| Epochs (per trial) | 5 |
+| Seeds | 1234, 42, 999 |
 
-Based on PHM08 competition (FD001 dataset):
-- Best competition score: 436.84
-- Our target MAE: < 8 cycles
-- Ensemble expectation: 5% improvement over best single model
-
-### Next Steps
-
-1. ✅ Individual model training (uncomment examples in Part 6)
-2. ⏳ Cross-dataset validation (FD002, FD003, FD004)
-3. ⏳ Hyperparameter tuning (grid search)
-4. ⏳ Ensemble integration with Jessica & Lucas's models
-5. ⏳ Final comparison and best model selection
-
-### Files to Create
-
-After training, organize saved models:
-```
-trained_models/
-├── lstm_transformer_fd001.pt
-├── gru_transformer_fd001.pt
-├── cnn_transformer_fd001.pt
-└── lstm_transformer_fd002.pt  (if trained on FD002)
-
-results/
-├── lstm_transformer_metrics.json
-├── gru_transformer_metrics.json
-├── cnn_transformer_metrics.json
-└── ensemble_results.csv
-```
 
 ### Key Features
 
@@ -193,8 +193,6 @@ A: Yes, change `SEQUENCE_LENGTH` in the data preparation cell
 **Q: How do I save trained models?**
 A: Use `torch.save(model.state_dict(), 'model_name.pt')`
 
-**Q: Which model should I train first?**
-A: CNN-Transformer is fastest; LSTM-Transformer usually best
 
 ### References
 
@@ -204,5 +202,5 @@ A: CNN-Transformer is fastest; LSTM-Transformer usually best
 - **Framework**: PyTorch 2.0+
 
 ### Contact
-Implemented by: Owen
+Implemented by: Palinya Sengdalavong (Owen)
 Team: Deep Learning Project SUTD 50.039

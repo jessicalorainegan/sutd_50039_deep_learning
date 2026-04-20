@@ -50,13 +50,9 @@ Use `RNN-based/` as the main area for the GRU/RNN/LSTM experiments.
 Use `Hybrid/` for hybrid Transformer-based experiments (LSTM/GRU/CNN encoders with Transformer blocks).
 
 - `archive/`: older files and experiments.
-- `model_exploration.ipynb`: baseline end-to-end workflow (EDA, sequence creation, hybrid model definitions, training pipeline).
+- `FD001_hybrid_transformers_FE_AWS_SagemakerAI.ipynb`: baseline end-to-end workflow (EDA, sequence creation, hybrid model definitions, training pipeline).
 - `FD001_hyperparamter_tunning.ipynb`: FD001 hyperparameter tuning workflow (focus on sequence length and learning rate, with validation/test RMSE tracking).
-- `hybrid_transformers.ipynb`: hybrid Transformer training workflow on processed NASA RUL data.
-- `hybrid_transformers_FE.ipynb`: feature-engineered variant across multiple processed dataset versions.
-- `FD001_hybrid_transformers_FE_AWS_SagemakerAI.ipynb`: FD001 feature-engineered hybrid Transformer workflow adapted for cloud/AWS-style execution.
-- `FD002_hybrid_transformers_FE_AWS_SagemakerAI.ipynb`: FD002 counterpart of the AWS/feature-engineered workflow.
-- `config.py` and `utils.py`: shared configuration and utility helpers for reproducible runs.
+- `config.py` and `helpers.py` (at root directory): shared configuration and utility helpers for reproducible runs.
 
 ## 4) Transformer-Only Experiment (`Transformer/`)
 
@@ -69,15 +65,48 @@ Use `Hybrid/` for hybrid Transformer-based experiments (LSTM/GRU/CNN encoders wi
 
 ## 5) Architecture Performance After Fine-tuning
 
-| Category | Model Architecture | Best Mean RMSE |
-| :--- | :--- | :--- |
-| **RNN-based** | RNN | 38.58 |
-| | GRU | 13.17 |
-| | LSTM | 39.58 |
-| **Transformer** | `RULTransformer` | ~~12.10~~ 12.41 |
-| **Hybrid** | CNN-Trans | 13.15 |
-| | GRU-Trans | 12.05 |
-| | LSTM-Trans | 12.20 |
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Model Architecture</th>
+      <th>Best Mean RMSE</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="3"><strong>RNN-based</strong></td>
+      <td>RNN</td>
+      <td>38.58</td>
+    </tr>
+    <tr>
+      <td>GRU</td>
+      <td>13.17</td>
+    </tr>
+    <tr>
+      <td>LSTM</td>
+      <td>39.58</td>
+    </tr>
+    <tr>
+      <td><strong>Transformer</strong></td>
+      <td><code>RULTransformer</code></td>
+      <td><del>12.10</del> 12.41</td>
+    </tr>
+    <tr>
+      <td rowspan="3"><strong>Hybrid</strong></td>
+      <td>CNN-Trans</td>
+      <td>13.15</td>
+    </tr>
+    <tr>
+      <td>GRU-Trans</td>
+      <td>12.05</td>
+    </tr>
+    <tr>
+      <td>LSTM-Trans</td>
+      <td>12.20</td>
+    </tr>
+  </tbody>
+</table>
 
 Note on Report Metrics: The report cites a Best Test RMSE of 12.10 for RULTransformer. This reflects the peak test performance observed during the hyperparameter grid search (seed=1234, seq_len=50, lr=0.001, num_layers=1). The final reproducible model (seed=1234, seq_len=50, lr=0.0005, num_layers=1), selected strictly via best Validation RMSE to prevent data leakage, achieved a Test RMSE of 12.41.
 
@@ -93,4 +122,4 @@ Note on Report Metrics: The report cites a Best Test RMSE of 12.10 for RULTransf
 2. `RNN-based/tuning/` notebooks (RNN hyperparameter and dataset exploration).
 3. `RNN-based/best_model_and_evaluation/best-gru.ipynb` and `RNN-based/best_model_and_evaluation/load_and_evaluate.ipynb` (final RNN training and evaluation).
 4. `Transformer/transformer-with-opt.ipynb` (standalone Transformer optimization and evaluation).
-5. `Hybrid/model_exploration.ipynb`, then `Hybrid/FD001_hyperparamter_tunning.ipynb` and FE/AWS notebooks (Hybrid Transformer workflows).
+5. `Hybrid/README.md` to have a rough idea of the Hybrid Transformer workflows and how to run the evaluation, then `Hybrid/FD001_hybrid_transformers_FE_AWS_SagemakerAI.ipynb`, then `Hybrid/FD001_hyperparamter_tunning.ipynb` and FE/AWS notebooks (Hybrid Transformer workflows).
